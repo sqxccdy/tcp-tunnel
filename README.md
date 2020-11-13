@@ -14,3 +14,10 @@
 从而实现公网8888到内网80端口的socket映射
 
 功能简单，代码也简单
+
+
+==
+联系方式
+
+mail: sqxccdy@icloud.com
+github地址： [https://github.com/sqxccdy/tcp-tunnel](https://github.com/sqxccdy/tcp-tunnel)

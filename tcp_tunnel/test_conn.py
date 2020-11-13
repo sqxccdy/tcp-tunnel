@@ -1,18 +1,19 @@
 import asyncio
-from socket_ddns.remote_test import Connection
+from tcp_tunnel.connection import Connection
+from tcp_tunnel import logger
 
 
-async def tcp_echo_client(message):
+async def tcp_echo_client():
     for i in range(100):
         reader, writer = await asyncio.open_connection('127.0.0.1', 8889)
         gold_reader, gold_writer = await asyncio.open_connection('127.0.0.1', 8000)
         conn = Connection(reader, writer, gold_reader, gold_writer)
         loop.create_task(conn.run_writer())
         loop.create_task(conn.run_reader())
-        print('create conn')
+        logger.debug('create conn')
 
 loop = asyncio.get_event_loop()
-future = asyncio.ensure_future(tcp_echo_client('Hello World!'))
+future = asyncio.ensure_future(tcp_echo_client())
 try:
     loop.run_forever()
 except KeyboardInterrupt:
