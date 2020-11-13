@@ -6,13 +6,15 @@ data2 = {}
 
 
 class DuplexConnection(object):
-    server2 = server = None
+    server3 = server2 = server = None
 
     def __init__(self, loop):
         self.queue = asyncio.Queue(maxsize=100)
+        self.magic = asyncio.Queue(maxsize=100)
         self.loop = loop
 
     async def serve(self):
+        self.server3 = await asyncio.start_server(self.listen_conn, '127.0.0.1', 8890)
         self.server2 = await asyncio.start_server(self.receive_conn, '127.0.0.1', 8889)
         self.server = await asyncio.start_server(self.handle_echo, '127.0.0.1', 8888)
         addr = self.server.sockets[0].getsockname()
@@ -21,13 +23,20 @@ class DuplexConnection(object):
         while True:
             await asyncio.sleep(1)
 
+    async def listen_conn(self, reader, writer):
+        while True:
+            data = await self.magic.get()
+            print(data)
+            writer.write(data)
+
     async def receive_conn(self, reader, writer):
         logger.debug('received conn')
         await self.queue.put((reader, writer))
 
     async def handle_echo(self, reader, writer):
+        await self.magic.put(b'1')
         gold_reader, gold_writer = await self.queue.get()
-        conn = Connection(reader, writer, gold_reader, gold_writer)
+        conn = Connection(reader, writer, gold_reader, gold_writer, self.loop)
         self.loop.create_task(conn.run_writer())
         self.loop.create_task(conn.run_reader())
         logger.debug('create conn')
