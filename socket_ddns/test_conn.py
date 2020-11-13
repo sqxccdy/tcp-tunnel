@@ -1,5 +1,5 @@
 import asyncio
-from remote_test import Connection
+from socket_ddns.remote_test import Connection
 
 
 async def tcp_echo_client(message):

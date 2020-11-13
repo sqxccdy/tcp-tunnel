@@ -1,4 +1,4 @@
-# tcp-socket-proxy
+# tcp-tunnel 
 基于TCP极其简单的socket穿透
 
 代替花生壳等类似ddns服务，阿里云服务器最小买5年，100块一年。还是非常划算的。速度和服务比花生壳优秀得多
